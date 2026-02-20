@@ -1,0 +1,346 @@
+---
+title: "Week 3 Lab Exercise: R Fundamentals -- Data Types & Structures"
+subtitle: "QMIR 2026"
+author: ""
+date: last-modified
+date-format: MMMM D, YYYY
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    papersize: a4
+    fontsize: 12pt
+---
+
+# Introduction
+
+This document accompanies the Week 3 lecture. We will work through it together step by step. The goal is not to finish as fast as possible -- it is to build good habits: writing clean code, checking your output, and understanding what each line does before moving on.
+
+At the bottom of the document you will find **optional exercises** if you finish early.
+
+# Part I: Objects, Functions & Pipes
+
+## Objects -- Storing Information
+
+We start by creating a few objects. An object has a name, a value, and a type.
+
+```{r}
+# Assign some values to named objects
+country <- "Germany"
+gdp_per_capita <- 54300
+is_eu_member <- TRUE
+```
+
+Now print each object by typing its name:
+
+```{r}
+country
+gdp_per_capita
+is_eu_member
+```
+
+**What to notice:** nothing is printed when you *assign* — only when you *call* the name.
+
+## Functions -- Doing Things with Objects
+
+Functions take inputs (arguments) and return outputs. We apply them to the objects we just created.
+
+```{r}
+gdp_values <- c(42300, 54300, 33200, 28700, 19800)
+
+mean(gdp_values)
+sqrt(gdp_per_capita)
+nchar(country)
+```
+
+We can also write our own small functions:
+
+```{r}
+add_vat <- function(price) {
+  price * 1.19
+}
+
+add_vat(100)
+add_vat(gdp_per_capita)
+```
+
+## The Pipe -- Chaining Operations
+
+Without the pipe, nested calls become hard to read:
+
+```{r}
+round(mean(sqrt(gdp_values)), digits = 2)
+```
+
+With the native pipe `|>`, we read left to right:
+
+```{r}
+gdp_values |> sqrt() |> mean() |> round(digits = 2)
+```
+
+**The pipe says:** *take this, and then do that.*
+
+# Part II: Data Types
+
+## Numeric
+
+```{r}
+gdp <- 54300.5 # double -- decimal numbers
+seats <- 736L # integer -- whole numbers (note the L)
+
+class(gdp)
+class(seats)
+```
+
+## Character
+
+```{r}
+capital <- "Berlin"
+country <- "Germany"
+
+nchar(country)
+toupper(country)
+paste(country, "is a member of the EU")
+```
+
+Numbers stored as characters are **not** numbers -- R will not do math with them:
+
+```{r}
+#| error: true
+"42" + 1
+```
+
+But we can convert them:
+
+```{r}
+as.numeric("42") + 1
+```
+
+## Logical
+
+```{r}
+is_eu_member <- TRUE
+population <- 84000000
+
+population > 50000000
+population == 84000000
+!is_eu_member
+```
+
+Try combining conditions:
+
+```{r}
+population > 50000000 & is_eu_member
+population > 50000000 | is_eu_member
+```
+
+## Factors and Dates
+
+Factors are for categorical variables with a fixed set of levels:
+
+```{r}
+regime <- factor(
+  c("democracy", "autocracy", "democracy", "hybrid"),
+  levels = c("autocracy", "hybrid", "democracy")
+)
+
+regime
+levels(regime)
+```
+
+Dates allow calendar arithmetic:
+
+```{r}
+today <- Sys.Date()
+treaty_of_rome <- as.Date("1957-03-25")
+
+today - treaty_of_rome
+```
+
+
+
+# Part III: Data Structures
+
+## Vectors
+
+Vectors are the basic building block in R. All elements must be the same type.
+
+```{r}
+countries <- c("Germany", "France", "Italy", "Spain", "Poland")
+population <- c(84, 68, 60, 47, 38) # millions
+eu_member <- c(TRUE, TRUE, TRUE, TRUE, TRUE)
+
+length(countries)
+class(population)
+```
+
+What happens when we mix types?
+
+```{r}
+mixed <- c(1, 2, "three")
+mixed
+class(mixed)
+```
+
+**What to notice:** R silently converts everything to the most flexible type. This is called *coercion* -- it can cause quiet bugs if you are not paying attention.
+
+## Data Frames
+
+A data frame is the workhorse of data analysis in R. Each column is a vector; columns can be different types.
+
+```{r}
+eu_data <- data.frame(
+  country = c("Germany", "France", "Italy", "Spain", "Poland"),
+  population = c(84, 68, 60, 47, 38),
+  eu_member = c(TRUE, TRUE, TRUE, TRUE, TRUE),
+  regime = c("democracy", "democracy", "democracy", "democracy", "democracy")
+)
+
+eu_data
+```
+
+Explore the data frame:
+
+```{r}
+nrow(eu_data)
+ncol(eu_data)
+head(eu_data)
+str(eu_data)
+summary(eu_data)
+```
+
+## Lists
+
+Lists are flexible containers -- they can hold anything, including objects of different types and lengths.
+
+```{r}
+country_info <- list(
+  name = "Germany",
+  population = 84000000,
+  eu_member = TRUE,
+  parties = c("SPD", "CDU", "Greens", "FDP")
+)
+
+country_info
+```
+
+You will encounter lists constantly as outputs of statistical models later in the course.
+
+
+
+# Part IV: Accessing & Exploring Data
+
+## Indexing Vectors with `[ ]`
+
+```{r}
+countries[1] # first element
+countries[c(1, 3)] # first and third
+countries[-2] # everything except the second
+```
+
+Logical indexing -- filter by condition:
+
+```{r}
+population > 50
+countries[population > 50]
+```
+
+## Indexing Data Frames with `[ ]` and `$`
+
+```{r}
+eu_data[1, ] # first row, all columns
+eu_data[, 2] # all rows, second column
+eu_data[1, 2] # specific cell: row 1, column 2
+```
+
+Access a column by name with `$` -- this returns a vector:
+
+```{r}
+eu_data$country
+eu_data$population
+```
+
+Combine: filter rows by a condition:
+
+```{r}
+eu_data[eu_data$population > 60, ]
+```
+
+
+
+# Optional Depth Exercises
+
+These exercises are for students who finish the walkthrough early. Work through them in order. Write a short comment or prose sentence explaining what each block of code does.
+
+
+
+## Optional 1 -- Build Your Own Data Frame
+
+Create a data frame about a topic of your choice (e.g., political parties, countries, historical events). It should have:
+
+- At least 5 rows
+- At least 4 columns, including at least one `character`, one `numeric`, and one `logical` column
+
+Then run `str()` and `summary()` on it.
+
+```{r}
+# Your code here
+
+```
+
+
+
+## Optional 2 -- Factors and Ordering
+
+Take a character vector of regime types (e.g., `"democracy"`, `"autocracy"`, `"hybrid"`) and convert it to a factor with a meaningful level order. Then:
+
+- Print the factor
+- Use `table()` to count how often each level appears
+- Try `sort()` on the factor and observe what happens
+
+```{r}
+# Your code here
+
+```
+
+
+
+## Optional 3 -- Logical Filtering
+
+Using the `eu_data` data frame from the walkthrough (or your own), write three different filtering expressions using `[ ]` and logical conditions. For example:
+
+- Countries with population above a threshold
+- Countries where `eu_member` is `TRUE`
+- Combine two conditions with `&` or `|`
+
+```{r}
+# Your code here
+
+```
+
+
+
+## Optional 4 -- The Pipe in Practice
+
+Take a numeric vector of your choice and chain at least **four** operations using `|>`. For example: create → transform → summarise → round.
+
+Write a sentence beneath the code cell explaining what the pipe chain does in plain language.
+
+```{r}
+# Your code here
+
+```
+
+
+
+## Optional 5 -- Date Arithmetic
+
+Create two `Date` objects representing politically significant events (e.g., founding of an organization, an election date, a treaty signing).
+
+- Calculate the number of days between them
+- Use `format()` to print one of the dates in a different format (e.g., `"%B %d, %Y"`)
+
+```{r}
+# Your code here
+
+```
