@@ -64,6 +64,13 @@ add_vat(100)
 add_vat(gdp_per_capita)
 ```
 
+## Getting help
+
+```{r}
+help(mean)
+?mean()
+```
+
 ## The Pipe -- Chaining Operations
 
 Without the pipe, nested calls become hard to read:
@@ -268,7 +275,7 @@ eu_data[eu_data$population > 60, ]
 
 
 
-# Optional Depth Exercises
+# Optional Exercises
 
 These exercises are for students who finish the walkthrough early. Work through them in order. Write a short comment or prose sentence explaining what each block of code does.
 
