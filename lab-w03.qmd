@@ -351,3 +351,92 @@ Create two `Date` objects representing politically significant events (e.g., fou
 # Your code here
 
 ```
+
+# Optional Advanced Exercises: `if()` and `for()`
+
+These exercises are for students who finish the walkthrough early. They introduce two of the most fundamental control structures in programming: conditionals and loops. Work through them in order -- each builds on the last. Write a short comment or prose sentence explaining what each block does.
+
+The goal is simple: by the end, you will have written your first loop. That is a genuine milestone.
+
+## Optional Advanced 1 -- Your First `if()` Statement
+
+An `if()` statement lets R make a decision. If the condition inside the parentheses is `TRUE`, the code inside the curly braces runs. If it is `FALSE`, R skips it.
+
+Start by running this example and making sure you understand the output:
+
+```{r}
+gdp_per_capita <- 54300
+
+if (gdp_per_capita > 40000) {
+  print("High income country")
+}
+```
+
+Now extend it with an `else` branch, so R prints something different when the condition is not met:
+
+```{r}
+# Your code here -- add an else branch that prints "Not a high income country"
+
+```
+
+Then try changing the value of `gdp_per_capita` to something below 40000 and re-run. Does the output change as expected?
+
+**What to notice:** `if()` evaluates a single condition and runs one of two branches. The condition must resolve to a single `TRUE` or `FALSE` -- not a vector.
+
+
+
+## Optional Advanced 2 -- Your First `for()` Loop
+
+A `for()` loop repeats a block of code once for each element in a sequence. On each iteration, the loop variable takes the next value from the sequence.
+
+Run this example and read the output carefully:
+
+```{r}
+countries <- c("Germany", "France", "Italy", "Spain", "Poland")
+
+for (country in countries) {
+  print(country)
+}
+```
+
+Now modify the loop so it does not just print the name, but prints a full sentence -- for example: `"Germany is in our dataset."` You will need `paste()` inside the loop.
+
+```{r}
+# Your code here
+
+```
+
+**What to notice:** the loop variable (`country` here) is just a name -- you could call it anything. On each pass through the loop it holds a different value from the vector. The code inside the curly braces runs once per element.
+
+
+
+## Optional Advanced 3 -- Combining `for()` and `if()`
+
+Now put the two together. Loop over the `eu_data` data frame row by row and use an `if()`/`else` inside the loop to print a different message depending on a condition.
+
+Here is a scaffold to get you started:
+
+```{r}
+eu_data <- data.frame(
+  country = c("Germany", "France", "Italy", "Spain", "Poland"),
+  population = c(84, 68, 60, 47, 38),
+  eu_member = c(TRUE, TRUE, TRUE, TRUE, TRUE),
+  regime = c("democracy", "democracy", "democracy", "democracy", "democracy")
+)
+
+for (i in 1:nrow(eu_data)) {
+  # eu_data[i, ] gives you the i-th row as a data frame
+  # eu_data$population[i] gives you the population of the i-th country
+  # Your code here: print a sentence that says whether the country's
+  # population is above or below 60 million
+}
+```
+
+Once that works, try adding a second condition: also note whether the country is an EU member or not. You can nest `if()` statements, or combine conditions with `&`.
+
+```{r}
+# Your extended version here
+
+```
+
+**What to notice:** `i` here is an index -- a number that tells you which row you are on. `1:nrow(eu_data)` generates the sequence `1, 2, 3, 4, 5`. Using `eu_data$population[i]` inside the loop lets you access the value for the current row. This index-based pattern is extremely common in R and in programming generally.
