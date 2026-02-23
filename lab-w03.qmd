@@ -29,6 +29,8 @@ We start by creating a few objects. An object has a name, a value, and a type.
 country <- "Germany"
 gdp_per_capita <- 54300
 is_eu_member <- TRUE
+
+country2 <- "France"
 ```
 
 Now print each object by typing its name:
@@ -61,7 +63,8 @@ add_vat <- function(price) {
 }
 
 add_vat(100)
-add_vat(gdp_per_capita)
+# function on vector: do operation on each element
+add_vat(gdp_values)
 ```
 
 ## Getting help
@@ -107,7 +110,7 @@ country <- "Germany"
 
 nchar(country)
 toupper(country)
-paste(country, "is a member of the EU")
+paste(country, "is a member of the EU, and", capital, "is the capital.")
 ```
 
 Numbers stored as characters are **not** numbers -- R will not do math with them:
@@ -126,7 +129,7 @@ as.numeric("42") + 1
 ## Logical
 
 ```{r}
-is_eu_member <- TRUE
+is_eu_member <- FALSE
 population <- 84000000
 
 population > 50000000
